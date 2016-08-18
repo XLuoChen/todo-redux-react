@@ -62,7 +62,7 @@ class TodoList extends React.Component {
     render() {
         return <div>
             {this.props.todos.map((todo, index) => {
-                return <div><input type="checkbox" onClick={this.props.onToggle.bind(this, index)}/><span style={{
+                return <div><input type="checkbox" checked={todo.isDone} onClick={this.props.onToggle.bind(this, index)}/><span style={{
                     "display": "inline",
                     "textDecoration": todo.isDone ? "line-through" : ""
                 }}>{todo.text}</span></div>
