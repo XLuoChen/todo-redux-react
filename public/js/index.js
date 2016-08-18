@@ -14,6 +14,7 @@ class App extends React.Component {
     render() {
         return <div>
             <Todos addItem={this.addItem}/>
+            <TodoLists todoItems={store.getState().todoItems}/>
         </div>
     }
 }
@@ -33,4 +34,23 @@ class Todos extends React.Component {
     }
 }
 
-render(<App/>, document.getElementById('root'));
+class TodoLists extends React.Component {
+    render() {
+        const todoItems = this.props.todoItems.map((todoItem, index) => {
+            return <div key={index}>
+                {todoItem.text}
+            </div>
+        });
+        return <div>
+            {todoItems}
+        </div>
+    }
+}
+
+function listenRender() {
+    render(<App/>, document.getElementById('root'));
+}
+
+store.subscribe(listenRender);
+listenRender();
+
