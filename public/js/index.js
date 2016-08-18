@@ -8,12 +8,16 @@ const store = createStore(reducer);
 
 class App extends React.Component {
     add(text) {
-        store.dispatch({type:'ADD',text});
+        store.dispatch({type: 'ADD', text});
+    }
+
+    toggle(index) {
+        store.dispatch({type: 'TOGGLE', index});
     }
 
     render() {
         return <div>
-            <TodoList todos={store.getState().todos}/>
+            <TodoList todos={store.getState().todos} onToggle={this.toggle.bind(this)}/>
             <AddTodo onAdd={this.add}/>
         </div>
     }
@@ -22,8 +26,11 @@ class App extends React.Component {
 class TodoList extends React.Component {
     render() {
         return <div>
-            {this.props.todos.map(todo => {
-                return <div>{todo.text}</div>
+            {this.props.todos.map((todo, index) => {
+                return <div><input type="checkbox" onClick={this.props.onToggle.bind(this, index)}/><span style={{
+                    "display": "inline",
+                    "textDecoration": todo.isDone ? "line-through" : ""
+                }}>{todo.text}</span></div>
             })}
         </div>
     }
