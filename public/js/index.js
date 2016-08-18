@@ -15,10 +15,26 @@ class App extends React.Component {
         store.dispatch({type: "TOGGLE", id})
     }
 
+    filterTodoItems(filterName) {
+        store.dispatch({type: "SET_FILTER", filterName});
+    }
+
+    filter() {
+        const filterName = store.getState().filterName;
+        if (filterName === 'ALL') {
+            return store.getState().todoItems;
+        } else if (filterName === 'ACTIVE') {
+            return store.getState().todoItems.filter(todoItem => !todoItem.isDone);
+        } else {
+            return store.getState().todoItems.filter(todoItem => todoItem.isDone);
+        }
+    }
+
     render() {
         return <div>
             <Todos addItem={this.addItem}/>
-            <TodoLists todoItems={store.getState().todoItems} toggle={this.toggle}/>
+            <TodoLists todoItems={this.filter()} toggle={this.toggle}/>
+            <Footer filterTodoItems={this.filterTodoItems} filterName={store.getState().filterName}/>
         </div>
     }
 }
@@ -52,6 +68,23 @@ class TodoLists extends React.Component {
         });
         return <div>
             {todoItems}
+        </div>
+    }
+}
+
+class Footer extends React.Component {
+    filterTodoItems(filterName) {
+        this.props.filterTodoItems(filterName);
+    }
+
+    render() {
+        const menus = ['ALL', 'ACTIVE', 'COMPLETED'].map(menu => {
+            return <a onClick={this.filterTodoItems.bind(this, menu)}
+                      style={{"textDecoration": this.props.filterName === menu ? "underline" : ""}}>{menu}&nbsp;&nbsp;
+            </a>
+        });
+        return <div>
+            {menus}
         </div>
     }
 }

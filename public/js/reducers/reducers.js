@@ -1,4 +1,4 @@
-export default function todos(state = {todoItems: []}, action) {
+export default function todos(state = {todoItems: [], filterName: 'ALL'}, action) {
 
     switch (action.type) {
         case "ADD":
@@ -6,6 +6,9 @@ export default function todos(state = {todoItems: []}, action) {
             return state;
         case "TOGGLE":
             state.todoItems[action.id].isDone = !state.todoItems[action.id].isDone;
+            return state;
+        case "SET_FILTER":
+            state.filterName = action.filterName;
             return state;
     }
     return state;
