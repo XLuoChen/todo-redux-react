@@ -11,10 +11,14 @@ class App extends React.Component {
         store.dispatch({type: "ADD", todoItem});
     }
 
+    toggle(id) {
+        store.dispatch({type: "TOGGLE", id})
+    }
+
     render() {
         return <div>
             <Todos addItem={this.addItem}/>
-            <TodoLists todoItems={store.getState().todoItems}/>
+            <TodoLists todoItems={store.getState().todoItems} toggle={this.toggle}/>
         </div>
     }
 }
@@ -35,9 +39,14 @@ class Todos extends React.Component {
 }
 
 class TodoLists extends React.Component {
+    onToggle(id) {
+        this.props.toggle(id);
+    }
+
     render() {
         const todoItems = this.props.todoItems.map((todoItem, index) => {
             return <div key={index}>
+                <input type="checkbox" onClick={this.onToggle.bind(this, todoItem.id)}/>
                 {todoItem.text}
             </div>
         });
