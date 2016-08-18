@@ -15,13 +15,48 @@ class App extends React.Component {
         store.dispatch({type: 'TOGGLE', index});
     }
 
+    filter(filterName) {
+        store.dispatch({type: 'SET_FILTER', filterName})
+    }
+
+    filterTodos() {
+        if (store.getState().filterName === "ALL") {
+            return store.getState().todos;
+        }
+        else if (store.getState().filterName === "ACTIVE") {
+            return store.getState().todos.filter(todo => !todo.isDone);
+        } else {
+            return store.getState().todos.filter(todo => todo.isDone);
+        }
+    }
+
+
     render() {
         return <div>
-            <TodoList todos={store.getState().todos} onToggle={this.toggle.bind(this)}/>
+            <TodoList todos={this.filterTodos()} onToggle={this.toggle.bind(this)}/>
             <AddTodo onAdd={this.add}/>
+            <Footer onFilter={this.filter} filterName={store.getState().filterName}/>
         </div>
     }
 }
+
+class Footer extends React.Component {
+    onFilter(type) {
+        this.props.onFilter(type);
+    }
+
+    render() {
+        const links = ['ALL', 'ACTIVE', 'COMPLETED'].map(filterName => {
+            return <a style={{"textDecoration": this.props.filterName === filterName ? "underline" : ""}}
+                      onClick={this.onFilter.bind(this, filterName)}>{filterName}&nbsp;&nbsp;</a>
+
+        });
+        return <div>
+            {links}
+        </div>
+    }
+}
+
 
 class TodoList extends React.Component {
     render() {
